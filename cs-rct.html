@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RCT &amp; Causal Inference — Nik Manohar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.cs-hero{padding:3.5rem 0 3rem;border-bottom:0.5px solid var(--rule);}
+.cs-breadcrumb{display:flex;align-items:center;gap:0.5rem;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.10em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:1.5rem;}
+.cs-breadcrumb a{color:var(--ink-dim);text-decoration:none;transition:color 0.15s;}
+.cs-breadcrumb a:hover{color:var(--accent);}
+.cs-breadcrumb span{color:var(--ink-faint);}
+.cs-hero h1{font-size:clamp(24px,3.5vw,38px);margin-bottom:0.75rem;line-height:1.15;}
+.cs-meta{display:flex;flex-wrap:wrap;gap:0.5rem 2rem;margin-bottom:2rem;}
+.cs-meta-item{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-dim);}
+.cs-meta-item strong{color:var(--ink-mid);font-weight:400;}
+.cs-outcomes{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:0.5px solid var(--rule);border-radius:2px;overflow:hidden;}
+@media(max-width:600px){.cs-outcomes{grid-template-columns:1fr 1fr;}}
+.outcome-cell{background:var(--paper-2);padding:1.25rem;}
+.outcome-num{font-family:'Libre Baskerville',serif;font-size:28px;line-height:1;color:var(--accent);margin-bottom:4px;}
+.outcome-label{font-size:11px;color:var(--ink-dim);line-height:1.4;}
+.cs-section{margin:3rem 0;}
+.cs-section h2{font-size:clamp(18px,2.5vw,24px);margin-bottom:0.5rem;}
+.section-label{font-size:10px;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:0.75rem;}
+.cs-body-text{font-size:14.5px;color:var(--ink-mid);line-height:1.80;max-width:74ch;}
+.cs-body-text+.cs-body-text{margin-top:1rem;}
+.cs-body-text strong{color:var(--ink);font-weight:500;}
+.cs-divider{border:none;border-top:0.5px solid var(--rule);margin:2.5rem 0;}
+.cs-nav-footer{display:flex;justify-content:space-between;align-items:center;padding:2rem 0;border-top:0.5px solid var(--rule);margin-top:2rem;}
+.cs-nav-link{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-dim);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color 0.15s;}
+.cs-nav-link:hover{color:var(--accent);}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a class="nav-logo" href="index.html"><span class="dot"></span>NM</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="work.html" class="active">Work</a></li>
+    <li><a href="mailto:nikhilmanohar94@gmail.com">Contact</a></li>
+  </ul>
+</nav>
+<div class="page-wrap">
+
+  <div class="cs-hero fade-up">
+    <div class="cs-breadcrumb"><a href="work.html">Work</a><span>/</span><span>Case Study 06</span></div>
+    <div class="label" style="margin-bottom:0.6rem">Causal Inference · RCT Design</div>
+    <h1>Randomized Experiment Design<br><em>and Causal Effect Estimation</em></h1>
+    <div class="cs-meta">
+      <div class="cs-meta-item"><strong>Methods:</strong> RCT · CUPED · BART</div>
+      <div class="cs-meta-item"><strong>Domain:</strong> EdTech / tutoring platform</div>
+      <div class="cs-meta-item"><strong>ATT:</strong> +5.4 pp (p &lt; 0.001)</div>
+      <div class="cs-meta-item"><strong>P(τ &gt; 0):</strong> 97%</div>
+    </div>
+    <div class="cs-outcomes">
+      <div class="outcome-cell"><div class="outcome-num">+5.4pp</div><div class="outcome-label">ATT on 90-day retention, CUPED-adjusted, p &lt; 0.001</div></div>
+      <div class="outcome-cell"><div class="outcome-num">97%</div><div class="outcome-label">P(τ &gt; 0) under weakly informative Beta prior</div></div>
+      <div class="outcome-cell"><div class="outcome-num">+9.1pp</div><div class="outcome-label">HTE in highest-risk quintile (BART posterior mean)</div></div>
+    </div>
+  </div>
+
+  <div class="cs-section fade-up">
+    <div class="section-label">Research Question &amp; Estimand</div>
+    <h2>Identifying the Causal Effect of <em>Adaptive Session Pacing on Retention</em></h2>
+    <p class="cs-body-text">The platform from <a href="cs-churn.html" style="color:var(--ink-mid)">Case Study 01</a> wanted to test a product change: replacing fixed 45-minute sessions with an adaptive pacing system that reads engagement signals and adjusts session length in real time. The obvious analysis — comparing outcomes across students who happened to use the feature — wouldn't work. Students who engage more are already different in the ways that predict retention.</p>
+    <p class="cs-body-text">So we ran an experiment. Before touching any outcome data, we filed a pre-registration specifying the estimand, the randomization scheme, the target sample size, and the criterion that would trigger a deployment recommendation. <strong>Primary estimand: ATT.</strong> Secondary: ITT. Analysis locked before unblinding.</p>
+  </div>
+
+  <hr class="cs-divider">
+
+  <div class="cs-section fade-up">
+    <div class="section-label">Power Analysis</div>
+    <h2>Minimum Detectable Effect and <em>Sample Size Determination</em></h2>
+    <div class="two-col">
+      <div>
+        <p class="cs-body-text">The outcome was 90-day retention, binary. With a baseline rate of 71% from the prior 18-month cohort and a two-sided test at α = 0.05 with 80% power, we needed to detect a 5 percentage point lift. That threshold was set by the client — below 5 pp the feature wouldn't recover its development cost.</p>
+        <p class="cs-body-text" style="margin-top:1rem">From those parameters, the normal approximation to the binomial gives n ≈ 604 per arm. We added a 15% attrition buffer and targeted 700, or 1,400 total. Final enrollment: 1,412 (706 per arm) over a 12-week window.</p>
+        <div class="callout accent" style="margin-top:1rem">Running the sensitivity analysis across MDEs from 3 pp to 8 pp made the constraint concrete: effects below 3 pp would require more than 2,200 students per arm — longer than the platform's product cycle allowed.</div>
+      </div>
+      <div>
+        <div class="section-label" style="margin-bottom:0.75rem">Power curve across effect sizes (n = 700 per arm)</div>
+        <div class="bar-chart">
+          <div class="bar-row"><div class="bar-label">3 pp lift</div><div class="bar-track"><div class="bar-fill" style="width:28%"></div></div><div class="bar-val">28% power</div></div>
+          <div class="bar-row"><div class="bar-label">4 pp lift</div><div class="bar-track"><div class="bar-fill" style="width:52%"></div></div><div class="bar-val">52% power</div></div>
+          <div class="bar-row"><div class="bar-label" style="color:var(--ink)">5 pp lift ✓</div><div class="bar-track"><div class="bar-fill teal" style="width:80%"></div></div><div class="bar-val">80% power</div></div>
+          <div class="bar-row"><div class="bar-label">6 pp lift</div><div class="bar-track"><div class="bar-fill" style="width:91%"></div></div><div class="bar-val">91% power</div></div>
+          <div class="bar-row"><div class="bar-label">8 pp lift</div><div class="bar-track"><div class="bar-fill" style="width:99%"></div></div><div class="bar-val">&gt;99% power</div></div>
+        </div>
+        <div class="footnote">α = 0.05 two-sided, p₀ = 0.71. Normal approximation to the binomial.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="cs-divider">
+
+  <div class="cs-section fade-up">
+    <div class="section-label">Randomization &amp; Covariate Balance</div>
+    <h2>Blocked Assignment and <em>Pre-Treatment Balance Verification</em></h2>
+    <div class="two-col">
+      <div>
+        <p class="cs-body-text">Assignment was stratified on two variables: enrollment cohort month and subscription tier. Cohort month controlled for seasonal retention patterns; tier controlled for a known confound between plan type and engagement levels. Within each stratum, students were assigned 50/50 using a seeded CSPRNG, with the seed committed to the pre-registration document before any assignments were made.</p>
+        <p class="cs-body-text" style="margin-top:1rem">After enrollment closed, we checked balance across eight pre-treatment covariates using standardized mean differences. The largest SMD was 0.08 — well below the 0.10 threshold. A KS test on baseline session frequency returned p = 0.61.</p>
+        <div class="callout accent" style="margin-top:1rem">Blocking on two variables roughly halved estimator variance relative to simple random assignment — equivalent to needing about 250 fewer students to hit the same power target.</div>
+      </div>
+      <div>
+        <div class="section-label" style="margin-bottom:0.75rem">SMDs, baseline covariates (all below 0.10 threshold)</div>
+        <div class="bar-chart">
+          <div class="bar-row"><div class="bar-label">Session freq.</div><div class="bar-track"><div class="bar-fill teal" style="width:6%"></div></div><div class="bar-val">SMD 0.06</div></div>
+          <div class="bar-row"><div class="bar-label">Days since login</div><div class="bar-track"><div class="bar-fill teal" style="width:8%"></div></div><div class="bar-val">SMD 0.08</div></div>
+          <div class="bar-row"><div class="bar-label">Assessment trend</div><div class="bar-track"><div class="bar-fill teal" style="width:4%"></div></div><div class="bar-val">SMD 0.04</div></div>
+          <div class="bar-row"><div class="bar-label">Tenure (months)</div><div class="bar-track"><div class="bar-fill teal" style="width:3%"></div></div><div class="bar-val">SMD 0.03</div></div>
+          <div class="bar-row"><div class="bar-label">Drop-off score</div><div class="bar-track"><div class="bar-fill teal" style="width:5%"></div></div><div class="bar-val">SMD 0.05</div></div>
+          <div class="bar-row"><div class="bar-label">Subscription tier</div><div class="bar-track"><div class="bar-fill teal" style="width:1%"></div></div><div class="bar-val">SMD 0.01</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="cs-divider">
+
+  <div class="cs-section fade-up">
+    <div class="section-label">Variance Reduction</div>
+    <h2>CUPED and Covariate Adjustment for <em>Precision Improvement</em></h2>
+    <div class="two-col">
+      <div>
+        <p class="cs-body-text">CUPED reduced variance further at the analysis stage. The covariate vector was: 30-day session frequency from the two months before enrollment, baseline drop-off score, and the at-risk flag from the churn model in Case Study 01. Together they explained R² = 0.31 of outcome variance.</p>
+        <div class="callout teal" style="margin-top:1rem">R² = 0.31 translates to a 31% variance reduction, narrowing the 95% CI by about 18% versus the unadjusted difference-in-means. The same precision we got with 1,412 students would have required roughly 1,860 without CUPED.</div>
+      </div>
+      <div>
+        <table class="dtable">
+          <thead><tr><th>Estimator</th><th>Point estimate</th><th>95% CI</th><th>SE</th></tr></thead>
+          <tbody>
+            <tr><td>Unadjusted DiM</td><td>+5.3 pp</td><td>[+2.1, +8.5]</td><td>1.63</td></tr>
+            <tr><td>CUPED-adjusted</td><td>+5.4 pp</td><td>[+2.8, +8.0]</td><td>1.33</td></tr>
+            <tr><td>Lin estimator (OLS)</td><td>+5.4 pp</td><td>[+2.9, +7.9]</td><td>1.28</td></tr>
+          </tbody>
+        </table>
+        <div class="footnote">CUPED and Lin estimators are asymptotically equivalent. Point estimates are consistent across all three approaches, confirming robustness.</div>
+        <div class="stat-box" style="margin-top:1rem">
+          <div class="stat-num accent">31%</div>
+          <div class="stat-unit">Variance reduction via CUPED</div>
+          <div class="stat-note">R² = 0.31 from pre-experiment covariate projection onto 90-day retention</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="cs-divider">
+
+  <div class="cs-section fade-up">
+    <div class="section-label">Primary Analysis</div>
+    <h2>Frequentist Hypothesis Test and <em>Causal Effect Estimate</em></h2>
+    <div class="two-col">
+      <div>
+        <p class="cs-body-text">The primary analysis was a two-sample z-test on CUPED-adjusted outcomes under ITT. The pre-registration specified two conditions for rejecting the null: p &lt; 0.05, <em>and</em> a lower confidence bound above 2 pp. Both conditions had to hold.</p>
+        <p class="cs-body-text" style="margin-top:1rem">Retention was 76.8% in the treatment arm and 71.4% in the control arm. The CUPED-adjusted estimate is +5.4 pp (z = 4.06, p &lt; 0.001), with a 95% CI lower bound of +2.8 pp. Both pre-registered criteria were satisfied.</p>
+      </div>
+      <div>
+        <div class="bar-chart" style="margin-bottom:1rem">
+          <div class="bar-row"><div class="bar-label">Control arm</div><div class="bar-track"><div class="bar-fill" style="width:71.4%"></div></div><div class="bar-val">71.4%</div></div>
+          <div class="bar-row"><div class="bar-label">Treatment arm</div><div class="bar-track"><div class="bar-fill teal" style="width:76.8%"></div></div><div class="bar-val">76.8%</div></div>
+        </div>
+        <table class="dtable">
+          <thead><tr><th>Estimand</th><th>Estimate</th><th>p-value</th><th>Decision</th></tr></thead>
+          <tbody>
+            <tr><td>ATT (CUPED)</td><td>+5.4 pp</td><td>&lt;0.001</td><td>Reject H₀ ✓</td></tr>
+            <tr><td>ITT (CUPED)</td><td>+4.9 pp</td><td>&lt;0.001</td><td>Reject H₀ ✓</td></tr>
+            <tr><td>CACE (IV)</td><td>+6.0 pp</td><td>&lt;0.001</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <hr class="cs-divider">
+
+  <div class="cs-section fade-up">
+    <div class="section-label">Heterogeneous Treatment Effects</div>
+    <h2>Bayesian Updating and <em>BART Subgroup Analysis</em></h2>
+    <div class="two-col">
+      <div>
+        <p class="cs-body-text">As a secondary analysis we fit a Bayesian beta-binomial model: P(τ &gt; 0) = 0.97. The more interesting secondary result came from BART. We used the churn model's at-risk score to stratify students into quintiles. The gradient is steep: students in the top risk quintile show a posterior mean effect of +9.1 pp [+5.8, +12.4], while the bottom quintile shows +1.8 pp [−1.1, +4.7].</p>
+        <div class="callout teal" style="margin-top:1rem">Targeting quintiles Q3–Q5 would capture roughly 85% of the estimated retention gain while reaching only 60% of students. That's the rollout we recommended.</div>
+      </div>
+      <div>
+        <div class="section-label" style="margin-bottom:0.75rem">Posterior mean treatment effect by at-risk quintile</div>
+        <div class="bar-chart">
+          <div class="bar-row"><div class="bar-label">Q5 (highest risk)</div><div class="bar-track"><div class="bar-fill accent" style="width:91%"></div></div><div class="bar-val">+9.1 pp</div></div>
+          <div class="bar-row"><div class="bar-label">Q4</div><div class="bar-track"><div class="bar-fill accent" style="width:70%"></div></div><div class="bar-val">+7.0 pp</div></div>
+          <div class="bar-row"><div class="bar-label">Q3</div><div class="bar-track"><div class="bar-fill" style="width:52%;background:var(--ink-mid)"></div></div><div class="bar-val">+5.2 pp</div></div>
+          <div class="bar-row"><div class="bar-label">Q2</div><div class="bar-track"><div class="bar-fill" style="width:33%"></div></div><div class="bar-val">+3.3 pp</div></div>
+          <div class="bar-row"><div class="bar-label">Q1 (lowest risk)</div><div class="bar-track"><div class="bar-fill" style="width:18%"></div></div><div class="bar-val">+1.8 pp</div></div>
+        </div>
+        <div class="footnote">BART posterior means by at-risk quintile. Monotone gradient consistent with mechanism hypothesis: adaptive pacing benefits students who are already disengaging.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="cs-divider">
+
+  <div class="cs-section fade-up">
+    <div class="section-label">Validity &amp; Limitations</div>
+    <h2>Threats to Causal Identification and <em>Deployment Recommendation</em></h2>
+    <div class="two-col">
+      <div>
+        <table class="dtable">
+          <thead><tr><th>Threat</th><th>Assessment</th><th>Severity</th></tr></thead>
+          <tbody>
+            <tr><td>SUTVA violation</td><td>Network spillover possible if students discuss pacing with peers; judged low-risk given asynchronous format</td><td>Low</td></tr>
+            <tr><td>Non-compliance</td><td>9% reversion; addressed via CACE estimator</td><td>Low</td></tr>
+            <tr><td>Attrition bias</td><td>12% dropout; no differential attrition by arm (p = 0.44)</td><td>Low</td></tr>
+            <tr><td>Hawthorne effect</td><td>Treatment students aware of new feature; retention measured at 90 days to mitigate novelty</td><td>Moderate</td></tr>
+            <tr><td>External validity</td><td>Single platform, single enrollment cohort; generalization untested</td><td>Moderate</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="three-col" style="margin-bottom:1.5rem">
+          <div class="stat-box"><div class="stat-num accent">+5.4pp</div><div class="stat-unit">ATE</div></div>
+          <div class="stat-box"><div class="stat-num accent">97%</div><div class="stat-unit">P(τ &gt; 0)</div></div>
+          <div class="stat-box"><div class="stat-num accent">+9.1pp</div><div class="stat-unit">Top quintile HTE</div></div>
+        </div>
+        <div class="callout teal">Both pre-registered criteria satisfied. Recommended phased rollout to Q3–Q5, keeping the control arm live for 180-day follow-up. Hawthorne effect concern warrants a second wave with blinded controls before full deployment.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cs-nav-footer">
+    <a href="cs-arch.html" class="cs-nav-link"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M8 5H2M4 3l-2 2 2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>05: LLM Architecture Eval</a>
+    <a href="work.html" class="cs-nav-link">All case studies<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5h6M6 3l2 2-2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+</div>
+<footer><div class="site-footer">
+  <div class="footer-left">Manohar Analytics Consulting · New York, NY</div>
+  <div class="footer-links"><a href="mailto:nikhilmanohar94@gmail.com">Email</a><a href="https://www.linkedin.com/in/nik-manohar/" target="_blank">LinkedIn</a><a href="https://github.com/nikm-ai" target="_blank">GitHub</a></div>
+</div></footer>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rent Optimization — Nik Manohar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.cs-hero{padding:3.5rem 0 3rem;border-bottom:0.5px solid var(--rule);}
+.cs-breadcrumb{display:flex;align-items:center;gap:0.5rem;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.10em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:1.5rem;}
+.cs-breadcrumb a{color:var(--ink-dim);text-decoration:none;transition:color 0.15s;}
+.cs-breadcrumb a:hover{color:var(--accent);}
+.cs-breadcrumb span{color:var(--ink-faint);}
+.cs-hero h1{font-size:clamp(24px,3.5vw,38px);margin-bottom:0.75rem;line-height:1.15;}
+.cs-meta{display:flex;flex-wrap:wrap;gap:0.5rem 2rem;margin-bottom:2rem;}
+.cs-meta-item{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-dim);}
+.cs-meta-item strong{color:var(--ink-mid);font-weight:400;}
+.cs-outcomes{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:0.5px solid var(--rule);border-radius:2px;overflow:hidden;}
+@media(max-width:600px){.cs-outcomes{grid-template-columns:1fr 1fr;}}
+.outcome-cell{background:var(--paper-2);padding:1.25rem;}
+.outcome-num{font-family:'Libre Baskerville',serif;font-size:28px;line-height:1;color:var(--accent);margin-bottom:4px;}
+.outcome-label{font-size:11px;color:var(--ink-dim);line-height:1.4;}
+.cs-section{margin:3rem 0;}
+.cs-section h2{font-size:clamp(18px,2.5vw,24px);margin-bottom:0.5rem;}
+.section-label{font-size:10px;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:0.75rem;}
+.cs-body-text{font-size:14.5px;color:var(--ink-mid);line-height:1.80;max-width:74ch;}
+.cs-body-text+.cs-body-text{margin-top:1rem;}
+.cs-body-text strong{color:var(--ink);font-weight:500;}
+.cs-divider{border:none;border-top:0.5px solid var(--rule);margin:2.5rem 0;}
+.cs-nav-footer{display:flex;justify-content:space-between;align-items:center;padding:2rem 0;border-top:0.5px solid var(--rule);margin-top:2rem;}
+.cs-nav-link{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-dim);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color 0.15s;}
+.cs-nav-link:hover{color:var(--accent);}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a class="nav-logo" href="index.html"><span class="dot"></span>NM</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="work.html" class="active">Work</a></li>
+    <li><a href="mailto:nikhilmanohar94@gmail.com">Contact</a></li>
+  </ul>
+</nav>
+<div class="page-wrap">
+
+  <div class="cs-hero fade-up">
+    <div class="cs-breadcrumb"><a href="work.html">Work</a><span>/</span><span>Case Study 03</span></div>
+    <div class="label" style="margin-bottom:0.6rem">Machine Learning · Real Estate</div>
+    <h1>Rent Optimization via Gradient Boosting<br><em>and Mispricing Detection</em></h1>
+    <div class="cs-meta">
+      <div class="cs-meta-item"><strong>Model:</strong> LightGBM</div>
+      <div class="cs-meta-item"><strong>Domain:</strong> Residential real estate</div>
+      <div class="cs-meta-item"><strong>CV R²:</strong> 0.946</div>
+      <div class="cs-meta-item"><strong>MAE:</strong> $164/mo</div>
+    </div>
+    <div class="cs-outcomes">
+      <div class="outcome-cell"><div class="outcome-num">0.946</div><div class="outcome-label">CV R² — GBM vs. Ridge baseline at 0.800 (+14.6 pp)</div></div>
+      <div class="outcome-cell"><div class="outcome-num">$164</div><div class="outcome-label">MAE (monthly rent), 5-fold CV across 2,000 listings</div></div>
+      <div class="outcome-cell"><div class="outcome-num">5</div><div class="outcome-label">Metro markets: Austin, Chicago, Denver, Nashville, Seattle</div></div>
+    </div>
+  </div>
+
+  <div class="cs-section fade-up">
+    <div class="section-label">Problem Statement</div>
+    <h2>Systematic Mispricing in <em>Residential Portfolio Management</em></h2>
+    <p class="cs-body-text">At scale, manual rent-setting produces two predictable inefficiencies: units priced above market sit vacant, and units priced below market leave revenue uncollected. Neither shows up obviously in the data unless you have a reference point for what rent should be.</p>
+    <p class="cs-body-text">We trained a gradient boosting model to predict market-clearing rent from observable property and neighborhood features, then used the signed gap between prediction and asking price as the pricing signal. The outputs were surfaced through a Looker dashboard built for property managers with no quantitative background.</p>
+  </div>
+
+  <hr class="cs-divider">
+
+  <div class="cs-section fade-up">
+    <div class="section-label">Feature Set</div>
+    <h2>Observable Listing and <em>Market-Level Predictors</em></h2>
+    <p class="cs-body-text" style="margin-bottom:1.5rem">All features came from the client's property management system, comparable transaction data, and public census variables. No proprietary third-party feeds were used — the client had a hard constraint on data vendor spend, and the model needed to be reproducible on their existing infrastructure.</p>
+    <table class="dtable">
+      <thead><tr><th>Feature</th><th>Source</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><td>Square footage</td><td>PMS</td><td>Primary size signal; log-transformed in final model</td></tr>
+        <tr><td>Bedroom count</td><td>PMS</td><td>Categorical; unit type is a stronger signal than raw count above 3BR</td></tr>
+        <tr><td>Neighborhood demand score</td><td>Derived from listing velocity and days-on-market in submarket</td><td>Captures localized demand pressure not in static census variables</td></tr>
+        <tr><td>Distance to city center</td><td>Google Maps API</td><td>Negative coefficient throughout; non-linear effect captured by GBM naturally</td></tr>
+        <tr><td>Metropolitan market</td><td>PMS</td><td>Categorical; Austin, Chicago, Denver, Nashville, Seattle</td></tr>
+        <tr><td>Market segment</td><td>Client classification</td><td>Budget, mid-market, premium; interacts with size and location features</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="cs-divider">
+
+  <div class="cs-section fade-up">
+    <div class="section-label">Model Performance</div>
+    <h2>Gradient Boosting versus <em>Ridge Regression Baseline</em></h2>
+    <div class="two-col">
+      <div>
+        <p class="cs-body-text">A Ridge regression baseline was trained on the same features to establish a linear benchmark. The GBM outperformed it most in the premium segment, where the relationship between rent, location, and demand is non-linear and Ridge can only approximate.</p>
+        <div class="bar-chart" style="margin-top:1.25rem">
+          <div class="bar-row"><div class="bar-label">GBM (final)</div><div class="bar-track"><div class="bar-fill accent" style="width:94.6%"></div></div><div class="bar-val">0.946</div></div>
+          <div class="bar-row"><div class="bar-label">Random Forest</div><div class="bar-track"><div class="bar-fill" style="width:91%;background:var(--ink-mid)"></div></div><div class="bar-val">0.910</div></div>
+          <div class="bar-row"><div class="bar-label">Ridge baseline</div><div class="bar-track"><div class="bar-fill" style="width:80%"></div></div><div class="bar-val">0.800</div></div>
+        </div>
+        <div class="footnote">CV R², 5-fold. GBM: LightGBM, 500 estimators, max depth 6, learning rate 0.05.</div>
+      </div>
+      <div>
+        <p class="cs-body-text">The 14.6 pp gain over Ridge came from three places the linear model can't handle:</p>
+        <ul class="blist" style="margin-top:0.75rem">
+          <li>Non-linear distance decay (premium units closer to center command disproportionately higher rent)</li>
+          <li>Segment-by-market interaction effects not expressible in a linear form</li>
+          <li>Threshold effects in the demand score at high-demand submarkets</li>
+        </ul>
+        <div class="callout accent" style="margin-top:1rem">At $164/month MAE on a median rent around $2,200, the model's error is small enough that a 5% deviation threshold catches real pricing gaps rather than noise. That calibration was deliberate.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="cs-divider">
+
+  <div class="cs-section fade-up">
+    <div class="section-label">Mispricing Detection</div>
+    <h2>Translating Model Estimates into <em>Pricing Decisions</em></h2>
+    <div class="two-col">
+      <div>
+        <p class="cs-body-text">A listing was flagged as mispriced if its asking rent deviated from the model estimate by more than 5% in either direction. That threshold was set against the model's own error distribution: flagging gaps smaller than ~$110 on a $2,200 unit would mostly flag prediction noise, not real pricing problems.</p>
+        <ul class="blist" style="margin-top:0.75rem">
+          <li>Overpriced (above threshold): flag for rent reduction at next renewal opportunity</li>
+          <li>Underpriced (below threshold): flag for rent increase; demand score considered before recommendation</li>
+          <li>Within band: no action recommended; monitor quarterly</li>
+        </ul>
+      </div>
+      <div>
+        <div class="stat-box" style="margin-bottom:1rem">
+          <div class="stat-num accent">72%</div>
+          <div class="stat-unit">Listings flagged</div>
+          <div class="stat-note">51% overpriced; 20% underpriced. Dataset: 2,000 synthetic listings.</div>
+        </div>
+        <div class="callout red">The high mispricing rate (72%) reflects the synthetic dataset construction. In production deployments, mispricing rates of 20–30% are more typical for portfolios without systematic pricing tools.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="cs-divider">
+
+  <div class="cs-section fade-up">
+    <div class="section-label">Dashboard &amp; Handoff</div>
+    <h2>Looker Dashboard for <em>Non-Technical Property Managers</em></h2>
+    <div class="two-col">
+      <div>
+        <p class="cs-body-text">The dashboard was built for property managers with no quantitative background. The design principle was simple: <strong>show the conclusion, not the model.</strong> Each listing displays a status (overpriced, underpriced, or within band), the recommended dollar adjustment, and an estimated occupancy impact. The model mechanics are not exposed.</p>
+        <ul class="blist" style="margin-top:0.75rem">
+          <li>Revenue impact expressed as annualized dollars — not percentages — per manager feedback during testing</li>
+          <li>Demand score shown as a percentile rank within submarket, not a raw score</li>
+          <li>Model version and last-refresh timestamp displayed on every view to maintain trust in data currency</li>
+        </ul>
+      </div>
+      <div>
+        <div class="callout teal">Within a month of launch, property managers were making repricing decisions independently, without looping in the analytics team. That was the stated adoption goal, and it happened faster than expected.</div>
+        <a href="https://marketpricingintelligence-atvmumeubevb2x8cpbhddx.streamlit.app/" target="_blank" class="btn accent" style="margin-top:1rem;display:inline-flex">
+          Open live demo
+          <svg viewBox="0 0 10 10" fill="none"><path d="M2 8L8 2M8 2H4M8 2V6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="cs-nav-footer">
+    <a href="cs-dbt.html" class="cs-nav-link"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M8 5H2M4 3l-2 2 2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>02: dbt Pipeline</a>
+    <a href="cs-llm.html" class="cs-nav-link">04: LLM Narrative Generation<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5h6M6 3l2 2-2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+</div>
+<footer><div class="site-footer">
+  <div class="footer-left">Manohar Analytics Consulting · New York, NY</div>
+  <div class="footer-links"><a href="mailto:nikhilmanohar94@gmail.com">Email</a><a href="https://www.linkedin.com/in/nik-manohar/" target="_blank">LinkedIn</a><a href="https://github.com/nikm-ai" target="_blank">GitHub</a></div>
+</div></footer>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dbt Pipeline Architecture — Nik Manohar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.cs-hero { padding:3.5rem 0 3rem; border-bottom:0.5px solid var(--rule); }
+.cs-breadcrumb { display:flex;align-items:center;gap:0.5rem;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.10em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:1.5rem; }
+.cs-breadcrumb a { color:var(--ink-dim);text-decoration:none;transition:color 0.15s; }
+.cs-breadcrumb a:hover { color:var(--accent); }
+.cs-breadcrumb span { color:var(--ink-faint); }
+.cs-hero h1 { font-size:clamp(24px,3.5vw,38px);margin-bottom:0.75rem;line-height:1.15; }
+.cs-meta { display:flex;flex-wrap:wrap;gap:0.5rem 2rem;margin-bottom:2rem; }
+.cs-meta-item { font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-dim); }
+.cs-meta-item strong { color:var(--ink-mid);font-weight:400; }
+.cs-outcomes { display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:0.5px solid var(--rule);border-radius:2px;overflow:hidden; }
+@media(max-width:600px){.cs-outcomes{grid-template-columns:1fr 1fr;}}
+.outcome-cell { background:var(--paper-2);padding:1.25rem; }
+.outcome-num { font-family:'Libre Baskerville',serif;font-size:28px;line-height:1;color:var(--accent);margin-bottom:4px; }
+.outcome-label { font-size:11px;color:var(--ink-dim);line-height:1.4; }
+.cs-section { margin:3rem 0; }
+.cs-section h2 { font-size:clamp(18px,2.5vw,24px);margin-bottom:0.5rem; }
+.cs-section .section-label { font-size:10px;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:0.75rem; }
+.cs-body-text { font-size:14.5px;color:var(--ink-mid);line-height:1.80;max-width:74ch; }
+.cs-body-text+.cs-body-text { margin-top:1rem; }
+.cs-body-text strong { color:var(--ink);font-weight:500; }
+.cs-divider { border:none;border-top:0.5px solid var(--rule);margin:2.5rem 0; }
+.cs-nav-footer { display:flex;justify-content:space-between;align-items:center;padding:2rem 0;border-top:0.5px solid var(--rule);margin-top:2rem; }
+.cs-nav-link { font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-dim);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color 0.15s; }
+.cs-nav-link:hover { color:var(--accent); }
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a class="nav-logo" href="index.html"><span class="dot"></span>NM</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="work.html" class="active">Work</a></li>
+    <li><a href="mailto:nikhilmanohar94@gmail.com">Contact</a></li>
+  </ul>
+</nav>
+<div class="page-wrap">
+
+  <div class="cs-hero fade-up">
+    <div class="cs-breadcrumb"><a href="work.html">Work</a><span>/</span><span>Case Study 02</span></div>
+    <div class="label" style="margin-bottom:0.6rem">Data Infrastructure · SaaS</div>
+    <h1>Analytics Pipeline Architecture<br><em>with dbt</em></h1>
+    <div class="cs-meta">
+      <div class="cs-meta-item"><strong>Stack:</strong> dbt Core, Salesforce, Postgres, Google Sheets</div>
+      <div class="cs-meta-item"><strong>Consumer:</strong> Looker</div>
+      <div class="cs-meta-item"><strong>Engagements:</strong> 3 B2B SaaS clients</div>
+    </div>
+    <div class="cs-outcomes">
+      <div class="outcome-cell"><div class="outcome-num">3</div><div class="outcome-label">Client engagements with same source pattern</div></div>
+      <div class="outcome-cell"><div class="outcome-num">4</div><div class="outcome-label">Pipeline layers: sources → staging → intermediate → marts</div></div>
+      <div class="outcome-cell"><div class="outcome-num">100%</div><div class="outcome-label">Transformation logic in version control post-handoff</div></div>
+    </div>
+  </div>
+
+  <div class="cs-section fade-up">
+    <div class="section-label">Context</div>
+    <h2>Consolidating Fragmented Data into <em>Tested, Version-Controlled Layers</em></h2>
+    <p class="cs-body-text">Three separate clients had the same problem in slightly different forms: data scattered across systems that weren't designed to talk to each other, transformation logic living in spreadsheet formulas or SQL scripts nobody had reviewed in months, and downstream dashboards quietly consuming outputs nobody had tested.</p>
+    <p class="cs-body-text">In each case, a dbt Core project brought the transformation work into version control, separated it into well-defined layers, and left the client with a test suite they could actually run. The documentation transferred at project close rather than evaporating with the consultant.</p>
+  </div>
+
+  <hr class="cs-divider">
+
+  <div class="cs-section fade-up">
+    <div class="section-label">Architecture</div>
+    <h2>Layer Separation and <em>Materialization Strategy</em></h2>
+    <div class="pipeline">
+      <div class="pl-node"><div class="pl-name">Sources</div><div class="pl-sub">Raw, declared</div></div>
+      <div class="pl-node"><div class="pl-name">Staging</div><div class="pl-sub">Rename, cast, dedup</div></div>
+      <div class="pl-node active"><div class="pl-name">Intermediate</div><div class="pl-sub">Business logic joins</div></div>
+      <div class="pl-node"><div class="pl-name">Marts</div><div class="pl-sub">Looker-ready, wide</div></div>
+      <div class="pl-node"><div class="pl-name">Tests</div><div class="pl-sub">Schema + assertions</div></div>
+    </div>
+    <table class="dtable" style="margin-top:1.25rem">
+      <thead><tr><th>Layer</th><th>Materialization</th><th>Responsibility</th></tr></thead>
+      <tbody>
+        <tr><td>Staging</td><td><code>view</code></td><td>One model per source table; renames to snake_case, casts types, deduplicates via <code>row_number()</code></td></tr>
+        <tr><td>Intermediate</td><td><code>ephemeral</code> or <code>view</code></td><td>Cross-source joins; customer health scores, pipeline attribution, territory enrichment</td></tr>
+        <tr><td>Marts</td><td><code>table</code> (daily)</td><td>Denormalized, Looker-optimized; one row per business entity; tagged for downstream systems</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="cs-divider">
+
+  <div class="cs-section fade-up">
+    <div class="section-label">Source Integration</div>
+    <h2>Salesforce, Postgres, and <em>Google Sheets as Unified Sources</em></h2>
+    <div class="two-col">
+      <div>
+        <p class="cs-body-text">Each source had its own failure mode. Salesforce objects came in via Fivetran with non-deterministic sync timing and occasional duplicate rows. Postgres tables were clean structurally but needed extensive type coercion. Google Sheets — which operations teams used for territory mappings and targets — was the most fragile: a stale manual update could silently corrupt downstream reports without a freshness check in place.</p>
+      </div>
+      <div>
+        <ul class="blist">
+          <li>Salesforce: deduplication via <code>row_number() over (partition by id order by _fivetran_synced desc)</code> applied at every staging model</li>
+          <li>Postgres: <code>cast</code> applied uniformly at staging; no business logic until intermediate layer</li>
+          <li>Google Sheets: <code>freshness</code> block with 24-hour warn threshold; staleness breaks the DAG before downstream models run</li>
+          <li>All source declarations in a single <code>sources.yml</code> with full column-level documentation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <hr class="cs-divider">
+
+  <div class="cs-section fade-up">
+    <div class="section-label">Testing Framework</div>
+    <h2>Automated Testing Across <em>All Mart Models</em></h2>
+    <div class="two-col">
+      <div>
+        <p class="cs-body-text">Every mart model shipped with a <code>schema.yml</code> test suite. Generic tests covered the structural basics — uniqueness, nulls, accepted values. Singular tests written in SQL caught the domain-specific cases that generic tests can't express: revenue figures that should never be negative, or churn dates that can't precede enrollment.</p>
+        <div class="callout accent" style="margin-top:1rem">Test coverage was a contractual deliverable in two of the three engagements. Clients kept the test suite on handoff as a regression harness for future changes.</div>
+      </div>
+      <div>
+        <table class="dtable">
+          <thead><tr><th>Type</th><th>Examples</th></tr></thead>
+          <tbody>
+            <tr><td>Uniqueness</td><td>Primary key not duplicated across any mart grain</td></tr>
+            <tr><td>Not-null</td><td>All foreign keys and required business fields</td></tr>
+            <tr><td>Accepted values</td><td>Health segments, territory codes, status enumerations</td></tr>
+            <tr><td>Relationships</td><td>FK referential integrity between marts and staging</td></tr>
+            <tr><td>Expression</td><td><code>arr_usd >= 0</code>, <code>churn_date > enrollment_date</code></td></tr>
+            <tr><td>Freshness</td><td>Source tables updated within 24-hour SLA</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <hr class="cs-divider">
+
+  <div class="cs-section fade-up">
+    <div class="section-label">Outcomes &amp; Handoff</div>
+    <h2>Results and <em>Client Knowledge Transfer</em></h2>
+    <div class="two-col">
+      <div>
+        <p class="cs-body-text">The mart models were built with Looker naming conventions in mind from the start. That reduced the LookML work considerably and meant the handoff document was the dbt project itself — not a separate piece of documentation that would immediately fall out of date.</p>
+        <ul class="blist" style="margin-top:1rem">
+          <li>All three clients stopped running ad-hoc SQL scripts outside version control</li>
+          <li>Consistent naming across mart models shortened the LookML work on the Looker side</li>
+          <li>Quarterly dbt test runs integrated into CI pipelines in two engagements</li>
+          <li>Project documentation auto-generated via <code>dbt docs generate</code> served as the handoff artifact</li>
+        </ul>
+      </div>
+      <div>
+        <div class="callout teal">The <code>dbt docs generate</code> site served as the handoff document. Lineage graphs, column-level descriptions, and test results in one place — the internal team could update them without re-engagement.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cs-nav-footer">
+    <a href="cs-churn.html" class="cs-nav-link"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M8 5H2M4 3l-2 2 2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>01: Churn Prediction</a>
+    <a href="cs-rent.html" class="cs-nav-link">03: Rent Optimization<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5h6M6 3l2 2-2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+</div>
+<footer><div class="site-footer">
+  <div class="footer-left">Manohar Analytics Consulting · New York, NY</div>
+  <div class="footer-links"><a href="mailto:nikhilmanohar94@gmail.com">Email</a><a href="https://www.linkedin.com/in/nik-manohar/" target="_blank">LinkedIn</a><a href="https://github.com/nikm-ai" target="_blank">GitHub</a></div>
+</div></footer>
+</body>
+</html>
