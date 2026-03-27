@@ -316,3 +316,177 @@ code {
 .fade-up-3 { animation-delay: 0.20s; }
 .fade-up-4 { animation-delay: 0.28s; }
 .fade-up-5 { animation-delay: 0.36s; }
+
+/* ---- CURSOR GLOW ---- */
+.cursor-glow {
+  pointer-events: none;
+  position: fixed;
+  width: 320px; height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,255,136,0.06) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s ease;
+  z-index: 9999;
+  opacity: 0;
+}
+
+/* ---- ENHANCED CARD HOVER ---- */
+.app-card {
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s !important;
+}
+.app-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,255,136,0.06);
+}
+
+.stat-cell {
+  transition: background 0.2s;
+  cursor: default;
+}
+.stat-cell:hover {
+  background: var(--paper-3);
+}
+.stat-cell:hover .stat-cell-num { color: var(--accent); }
+.stat-cell:hover .stat-cell-num .accent { color: var(--ink); }
+
+.work-card {
+  transition: background 0.2s, transform 0.15s !important;
+}
+.work-card:hover {
+  transform: translateX(3px);
+}
+
+.exp-card {
+  transition: background 0.2s;
+}
+.exp-card:hover {
+  background: var(--paper-3);
+}
+.exp-card:hover .exp-org { color: var(--accent); }
+
+/* ---- NAV LINK UNDERLINE DRAW ---- */
+.nav-links a {
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0;
+  width: 100%; height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.2s ease;
+}
+.nav-links a:hover::after,
+.nav-links a.active::after {
+  transform: scaleX(1);
+}
+
+/* ---- HERO LINK HOVER ---- */
+.hero-link {
+  transition: color 0.15s, letter-spacing 0.15s !important;
+}
+.hero-link:hover {
+  letter-spacing: 0.06em;
+}
+
+/* ---- STAT COUNTER ANIMATION ---- */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.stat-cell-num.counting {
+  animation: countUp 0.4s ease both;
+}
+
+/* ---- TAG HOVER ---- */
+.tag, .cs-tag {
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.tag:hover, .cs-tag:hover {
+  background: var(--paper-3);
+  border-color: var(--accent-stroke);
+  color: var(--ink);
+}
+
+/* ---- CS ROW ENHANCED ---- */
+.cs-row {
+  transition: background 0.15s, padding-left 0.15s;
+}
+.cs-row:hover {
+  padding-left: 6px;
+}
+
+/* ---- FOOTER LINK UNDERLINE ---- */
+.footer-links a {
+  position: relative;
+}
+.footer-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0;
+  width: 100%; height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.18s ease;
+}
+.footer-links a:hover::after {
+  transform: scaleX(1);
+}
+
+/* ---- SECTION HEAD LABEL HOVER ---- */
+.section-head:hover .label {
+  color: var(--accent);
+  transition: color 0.15s;
+}
+
+/* ---- OUTCOME CELL HOVER (case studies) ---- */
+.outcome-cell {
+  transition: background 0.15s;
+}
+.outcome-cell:hover {
+  background: var(--paper-3);
+}
+.outcome-cell:hover .outcome-num {
+  text-shadow: 0 0 20px rgba(0,255,136,0.3);
+}
+
+/* ---- THINKING SECTION ---- */
+.thinking-section {
+  margin: 0;
+  padding: 2.5rem 0;
+  border-top: 0.5px solid var(--rule);
+}
+.thinking-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.thinking-item {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 0.5px solid var(--rule);
+  transition: padding-left 0.15s;
+}
+.thinking-item:last-child { border-bottom: none; }
+.thinking-item:hover { padding-left: 6px; }
+.thinking-item:hover .thinking-label { color: var(--accent); }
+.thinking-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  min-width: 80px;
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+.thinking-text {
+  font-size: 13.5px;
+  color: var(--ink-mid);
+  line-height: 1.55;
+}
