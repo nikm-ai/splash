@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nik Manohar — Data Science &amp; ML</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ---- HERO ---- */
+.hero {
+  padding: 6rem 0 4rem;
+  border-bottom: 0.5px solid var(--rule);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -80px;
+  width: 480px; height: 480px;
+  background: radial-gradient(circle, rgba(0,255,136,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1.75rem;
+}
+.hero-eyebrow .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+.hero-name {
+  font-family: 'Libre Baskerville', serif;
+  font-size: clamp(38px, 6vw, 64px);
+  font-weight: 400;
+  line-height: 1.04;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+}
+.hero-name em {
+  font-style: italic;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--ink-mid);
+  transition: color 0.2s, -webkit-text-stroke-color 0.2s;
+}
+.hero-name em:hover {
+  color: var(--accent);
+  -webkit-text-stroke-color: var(--accent);
+}
+.hero-bio {
+  font-size: 16px;
+  color: var(--ink-mid);
+  line-height: 1.80;
+  max-width: 62ch;
+  margin-bottom: 2.25rem;
+}
+.hero-bio strong { color: var(--ink); font-weight: 500; }
+.hero-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.75rem;
+  align-items: center;
+}
+.hero-link {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11.5px;
+  color: var(--ink-dim);
+  text-decoration: none;
+  display: flex; align-items: center; gap: 6px;
+  transition: color 0.15s;
+  letter-spacing: 0.04em;
+}
+.hero-link:hover { color: var(--accent); }
+.hero-link svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+/* ---- STATS BAND ---- */
+.stats-band {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 0.5px solid var(--rule);
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 3rem 0;
+}
+.stat-cell {
+  background: var(--paper-2);
+  padding: 1.5rem;
+  text-align: left;
+}
+.stat-cell-num {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 36px;
+  line-height: 1;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.stat-cell-num .accent { color: var(--accent); }
+.stat-cell-label { font-size: 12px; color: var(--ink-dim); line-height: 1.4; }
+@media(max-width:640px){.stats-band{grid-template-columns:1fr 1fr;}}
+
+/* ---- APP CARDS ---- */
+.app-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 0.5px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+}
+@media(max-width:700px){.app-grid{grid-template-columns:1fr;}}
+
+.app-card {
+  background: var(--paper-2);
+  padding: 1.75rem;
+  text-decoration: none;
+  display: flex; flex-direction: column; gap: 0.75rem;
+  transition: background 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.app-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+.app-card:hover { background: var(--paper-3); }
+.app-card:hover::after { transform: scaleX(1); }
+
+.app-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; color: var(--ink-dim); letter-spacing: 0.06em;
+}
+.app-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 15px; font-weight: 400;
+  color: var(--ink); line-height: 1.35;
+}
+.app-desc {
+  font-size: 13px; color: var(--ink-mid); line-height: 1.65; flex: 1;
+}
+.app-meta {
+  display: flex; justify-content: space-between;
+  align-items: flex-end; gap: 0.5rem; margin-top: auto;
+}
+.tag-row { display: flex; flex-wrap: wrap; gap: 4px; }
+.tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; padding: 2px 6px; border-radius: 2px;
+  background: var(--paper-4); color: var(--ink-dim);
+  border: 0.5px solid var(--rule);
+}
+.app-link-icon {
+  width: 28px; height: 28px; flex-shrink: 0;
+  border: 0.5px solid var(--rule-mid); border-radius: 2px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink-dim); transition: all 0.15s;
+}
+.app-card:hover .app-link-icon { border-color: var(--accent); color: var(--accent); }
+.app-link-icon svg { width: 10px; height: 10px; }
+
+/* ---- WORK PREVIEW ---- */
+.work-preview {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 0.5px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+}
+@media(max-width:640px){.work-preview{grid-template-columns:1fr;}}
+
+.work-card {
+  background: var(--paper-2);
+  padding: 1.5rem;
+  text-decoration: none;
+  display: flex; flex-direction: column; gap: 0.5rem;
+  transition: background 0.15s;
+  border-right: 1px solid transparent;
+}
+.work-card:hover { background: var(--paper-3); }
+.work-card:hover .work-num { color: var(--accent); }
+
+.work-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; color: var(--ink-dim);
+  letter-spacing: 0.06em; transition: color 0.15s;
+}
+.work-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 14px; font-weight: 400;
+  color: var(--ink); line-height: 1.35;
+}
+.work-sub {
+  font-size: 12px; color: var(--ink-dim); line-height: 1.5;
+}
+.work-arrow {
+  margin-top: auto; padding-top: 0.75rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-dim); display: flex; align-items: center; gap: 5px;
+  transition: color 0.15s;
+}
+.work-card:hover .work-arrow { color: var(--accent); }
+
+/* ---- EXPERIENCE ---- */
+.exp-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--rule);
+  border: 0.5px solid var(--rule); border-radius: 4px; overflow: hidden;
+}
+@media(max-width:640px){.exp-grid{grid-template-columns:1fr;}}
+
+.exp-card {
+  background: var(--paper-2); padding: 1.5rem;
+}
+.exp-org { font-size: 11px; font-weight: 500; color: var(--ink); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
+.exp-role { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--ink-dim); margin-bottom: 0.75rem; }
+.exp-body { font-size: 13px; color: var(--ink-mid); line-height: 1.65; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="nav-logo" href="index.html">
+    <span class="dot"></span>
+    NM
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="work.html">Work</a></li>
+    <li><a href="mailto:nikhilmanohar94@gmail.com">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow fade-up">
+      <span class="dot"></span>
+      <span class="label">Manohar Analytics Consulting — New York, NY</span>
+    </div>
+    <h1 class="hero-name fade-up fade-up-1">Nik Manohar<br><em>Quantitative Data Science</em></h1>
+    <p class="hero-bio fade-up fade-up-2">
+      Eight years of applied research and production modeling across <strong>consumer technology</strong>, <strong>institutional asset management</strong>, litigation economics, and an independent consulting practice. Engagements span the full pipeline — from feature engineering and model development through infrastructure build-out and reporting to non-technical stakeholders. Technical fluency in <strong>Python, SQL, dbt, and Looker</strong>. Domain depth in customer analytics, risk modeling, and LLM system design.
+    </p>
+    <div class="hero-contact fade-up fade-up-3">
+      <a class="hero-link" href="mailto:nikhilmanohar94@gmail.com">
+        <svg viewBox="0 0 12 12" fill="none"><rect x="1" y="2.5" width="10" height="7" rx="1" stroke="currentColor" stroke-width="1"/><path d="M1 3.5L6 7l5-3.5" stroke="currentColor" stroke-width="1"/></svg>
+        nikhilmanohar94@gmail.com
+      </a>
+      <a class="hero-link" href="https://www.linkedin.com/in/nik-manohar/" target="_blank">
+        <svg viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="1.5" stroke="currentColor" stroke-width="1"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6a1 1 0 012 0v2.5M5.5 6.5h2" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+        linkedin.com/in/nik-manohar
+      </a>
+      <a class="hero-link" href="https://github.com/nikm-ai" target="_blank">
+        <svg viewBox="0 0 12 12" fill="none"><path d="M6 1C3.24 1 1 3.24 1 6c0 2.21 1.43 4.08 3.42 4.74.25.05.34-.11.34-.24v-.85c-1.39.3-1.68-.67-1.68-.67-.23-.58-.56-.73-.56-.73-.45-.31.04-.3.04-.3.5.03.76.51.76.51.44.76 1.16.54 1.44.41.04-.32.17-.54.31-.66-1.1-.13-2.26-.55-2.26-2.45 0-.54.19-.98.51-1.33-.05-.13-.22-.63.05-1.31 0 0 .42-.13 1.37.51a4.76 4.76 0 012.5 0c.95-.64 1.37-.51 1.37-.51.27.68.1 1.18.05 1.31.32.35.51.79.51 1.33 0 1.91-1.16 2.32-2.27 2.45.18.15.34.46.34.93v1.38c0 .13.09.29.34.24A5.01 5.01 0 0011 6c0-2.76-2.24-5-5-5z" fill="currentColor"/></svg>
+        github.com/nikm-ai
+      </a>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-band fade-up fade-up-4">
+    <div class="stat-cell">
+      <div class="stat-cell-num">8<span class="accent">+</span></div>
+      <div class="stat-cell-label">Years applied ML &amp; data science</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-cell-num"><span class="accent">$</span>5M<span class="accent">+</span></div>
+      <div class="stat-cell-label">Documented business impact</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-cell-num">6</div>
+      <div class="stat-cell-label">Case studies in production systems</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-cell-num">3</div>
+      <div class="stat-cell-label">Live interactive applications</div>
+    </div>
+  </div>
+
+  <!-- LIVE APPS -->
+  <div class="section-head fade-up">
+    <span class="label">Live Applications</span>
+  </div>
+  <p style="font-size:14px;color:var(--ink-mid);margin-bottom:1.75rem;max-width:58ch;line-height:1.7;">
+    Three production-grade tools you can open right now — portfolio risk analytics, rental pricing intelligence, and LBO modeling.
+  </p>
+
+  <div class="app-grid">
+    <a href="https://nikmportfolioriskdash.streamlit.app/" target="_blank" class="app-card fade-up fade-up-1">
+      <div class="app-num">APP 01</div>
+      <div class="app-title">Equity Portfolio Risk Dashboard</div>
+      <div class="app-desc">Risk attribution and factor analysis across a 20-stock US large-cap portfolio benchmarked against the S&amp;P 500. Covers Sharpe, Sortino, Calmar, VaR/CVaR, CAPM alpha, Fama-French three-factor attribution, efficient frontier, stress testing, and regime detection.</div>
+      <div class="app-meta">
+        <div class="tag-row">
+          <span class="tag">Python</span>
+          <span class="tag">yfinance</span>
+          <span class="tag">Fama-French</span>
+          <span class="tag">VaR/CVaR</span>
+        </div>
+        <div class="app-link-icon">
+          <svg viewBox="0 0 10 10" fill="none"><path d="M2 8L8 2M8 2H4M8 2V6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+    </a>
+
+    <a href="https://marketpricingintelligence-atvmumeubevb2x8cpbhddx.streamlit.app/" target="_blank" class="app-card fade-up fade-up-2">
+      <div class="app-num">APP 02</div>
+      <div class="app-title">Rental Pricing Intelligence</div>
+      <div class="app-desc">Gradient Boosting Regressor trained on 2,000 synthetic listings across five US metro markets. Detects systematic pricing inefficiencies. Cross-validated R² of 0.946 (MAE $164/mo), outperforming Ridge baseline by 14.6 pp. Interactive scenario analysis with demand elasticity parameters.</div>
+      <div class="app-meta">
+        <div class="tag-row">
+          <span class="tag">GBM</span>
+          <span class="tag">sklearn</span>
+          <span class="tag">CV R² 0.946</span>
+        </div>
+        <div class="app-link-icon">
+          <svg viewBox="0 0 10 10" fill="none"><path d="M2 8L8 2M8 2H4M8 2V6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+    </a>
+
+    <a href="https://nikmlbo.streamlit.app/" target="_blank" class="app-card fade-up fade-up-3">
+      <div class="app-num">APP 03</div>
+      <div class="app-title">Leveraged Buyout Analysis</div>
+      <div class="app-desc">Interactive LBO structuring model with full return attribution, sensitivity tables, and Quasi-Monte Carlo risk simulation. Computes IRR and MOIC distributions under stochastic EBITDA, exit multiple, and debt structure assumptions.</div>
+      <div class="app-meta">
+        <div class="tag-row">
+          <span class="tag">Monte Carlo</span>
+          <span class="tag">IRR/MOIC</span>
+          <span class="tag">Sensitivity</span>
+        </div>
+        <div class="app-link-icon">
+          <svg viewBox="0 0 10 10" fill="none"><path d="M2 8L8 2M8 2H4M8 2V6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <!-- WORK PREVIEW -->
+  <div class="section-head">
+    <span class="label">Case Studies</span>
+  </div>
+  <p style="font-size:14px;color:var(--ink-mid);margin-bottom:1.75rem;max-width:58ch;line-height:1.7;">
+    Six documented engagements spanning ML modeling, data infrastructure, LLM systems, and causal inference.
+    <a href="work.html" style="color:var(--accent);text-decoration:none;margin-left:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.06em;">View all →</a>
+  </p>
+
+  <div class="work-preview">
+    <a href="cs-churn.html" class="work-card">
+      <div class="work-num">01</div>
+      <div class="work-title">Customer Churn Prediction via Behavioral Feature Engineering</div>
+      <div class="work-sub">XGBoost · EdTech platform · 81% holdout recall · ~8% churn reduction</div>
+      <div class="work-arrow">Read case study <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5h6M6 3l2 2-2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </a>
+    <a href="cs-dbt.html" class="work-card">
+      <div class="work-num">02</div>
+      <div class="work-title">Analytics Pipeline Architecture with dbt</div>
+      <div class="work-sub">dbt Core · SaaS clients · Salesforce, Postgres, Google Sheets · Looker</div>
+      <div class="work-arrow">Read case study <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5h6M6 3l2 2-2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </a>
+    <a href="cs-rent.html" class="work-card">
+      <div class="work-num">03</div>
+      <div class="work-title">Rent Optimization via Gradient Boosting and Mispricing Detection</div>
+      <div class="work-sub">LightGBM · Residential real estate · CV R² = 0.946 · MAE $164/mo</div>
+      <div class="work-arrow">Read case study <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5h6M6 3l2 2-2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </a>
+    <a href="cs-llm.html" class="work-card">
+      <div class="work-num">04</div>
+      <div class="work-title">LLM-Automated Portfolio Narrative Generation</div>
+      <div class="work-sub">GPT-4 API · Financial services · 6–8h cycle reduced to &lt;20m</div>
+      <div class="work-arrow">Read case study <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5h6M6 3l2 2-2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </a>
+    <a href="cs-arch.html" class="work-card">
+      <div class="work-num">05</div>
+      <div class="work-title">LLM Fine-Tuning versus Retrieval-Augmented Classification</div>
+      <div class="work-sub">Architecture evaluation · Enterprise document classification · LoRA vs. RAG</div>
+      <div class="work-arrow">Read case study <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5h6M6 3l2 2-2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </a>
+    <a href="cs-rct.html" class="work-card">
+      <div class="work-num">06</div>
+      <div class="work-title">Randomized Experiment Design and Causal Effect Estimation</div>
+      <div class="work-sub">RCT · CUPED · BART · ATT +5.4 pp, p &lt; 0.001 · P(τ &gt; 0) = 97%</div>
+      <div class="work-arrow">Read case study <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5h6M6 3l2 2-2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </a>
+  </div>
+
+  <!-- EXPERIENCE -->
+  <div class="section-head">
+    <span class="label">Prior Experience</span>
+  </div>
+  <div class="exp-grid">
+    <div class="exp-card">
+      <div class="exp-org">Rent the Runway</div>
+      <div class="exp-role">Data Scientist · 2022–2023</div>
+      <div class="exp-body">Inventory survival rate forecast accuracy +9%, enabling a 12% reduction in excess inventory and ~$2.5M in annual savings. Built dbt pipelines and Looker dashboards consumed by product, finance, and operations.</div>
+    </div>
+    <div class="exp-card">
+      <div class="exp-org">King Street Capital Management</div>
+      <div class="exp-role">Sr. Analyst, Portfolio & Risk Analytics · 2019–2022</div>
+      <div class="exp-body">Portfolio performance analytics and risk reporting for a $30B+ multi-asset hedge fund. Built dbt-based ETL pipelines saving $3M+ annually. Led ESG analytics initiative tracking carbon exposure and governance metrics.</div>
+    </div>
+    <div class="exp-card">
+      <div class="exp-org">Navigant Consulting · BEA</div>
+      <div class="exp-role">Economics Practice · 2016–2019</div>
+      <div class="exp-body">Quantitative economic analysis for expert witness testimony in antitrust and valuation disputes at Navigant. Prior: Economist at the U.S. Bureau of Economic Analysis producing personal income and employment estimates.</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="site-footer">
+    <div class="footer-left">Manohar Analytics Consulting · New York, NY</div>
+    <div class="footer-links">
+      <a href="mailto:nikhilmanohar94@gmail.com">Email</a>
+      <a href="https://www.linkedin.com/in/nik-manohar/" target="_blank">LinkedIn</a>
+      <a href="https://github.com/nikm-ai" target="_blank">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
